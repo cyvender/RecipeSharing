@@ -1,5 +1,4 @@
 import { useState, useEffect } from 'react';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../Context';
 import axios from 'axios';
 import Recipe from '../components/Recipe'
@@ -19,7 +18,6 @@ function Home() {
         getRecipes();
     }, [])
 
-    console.log(recipes)
     return (
         <div className="container" style={{ marginTop: '80px' }}>
             <div className="container mt-5" style={{ backgroundColor: 'rgb(245, 245, 245)', padding: '20px', borderRadius: '10px' }}>
@@ -31,10 +29,12 @@ function Home() {
                 </div>
                 <div className="row">
                     {recipes && recipes.map(r =>
-                        <Recipe recipe={r}
+                        <Recipe key={r.id}
+                            recipe={r}
                             ingredients={r.ingredients}
                             steps={r.steps}
-                            imageUrl={r.imageUrl} />
+                            imageUrl={r.imageUrl}
+                            isPreview={false} />
                     )}
                 </div>
             </div>

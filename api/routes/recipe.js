@@ -15,8 +15,7 @@ async function writeBase64ToFile(base64String) {
     return fileName;
 }
 
-// router.post('/addrecipe', ensureAuthenticated, async (req, res) => {
-router.post('/addrecipe', async (req, res) => {
+router.post('/addrecipe', ensureAuthenticated, async (req, res) => {
     const { base64data } = req.body;
     const fileName = await writeBase64ToFile(base64data);
     req.body.fileName = fileName;
@@ -35,6 +34,10 @@ router.get('/getrecipes', async (req, res) => {
 
 router.get('/getcategories', async (req, res) => {
     res.json(await db.getCategories());
+});
+
+router.get('/getcategoriesandcounts', ensureAuthenticated,  async (req, res) => {
+    res.json(await db.getCategoriesAndCounts());
 });
 
 router.get('/image/:name', async (req, res) => {

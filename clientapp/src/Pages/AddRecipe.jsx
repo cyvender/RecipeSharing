@@ -1,9 +1,5 @@
 import { useState, useRef } from 'react'
 import Recipe from '../components/Recipe'
-import ImageUpload from '../components/ImageUpload';
-import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
-import { faCheckCircle, faListDots, faUser } from '@fortawesome/free-solid-svg-icons';
-import { Link } from 'react-router-dom';
 import { useAuth } from '../Context';
 import axios from 'axios';
 
@@ -16,30 +12,36 @@ const toBase64 = file => new Promise((resolve, reject) => {
 
 const AddRecipe = () => {
 
-    const { categories } = useAuth();
+    const { categories, user } = useAuth();
     const fileRef = useRef();
 
-    // const [category, setCategory] = useState({});
     const [ingredients, setIngredients] = useState(['']);
     const [steps, setSteps] = useState([''])
     const [image, setImage] = useState(null);
-    const [isPublic, setIsPublic] = useState(false);
-    // const [title, setTitle] = useState('');
     const [recipe, setRecipe] = useState(
         {
             title: '',
             category: '',
+            categoryId: '',
             ingredientsString: '',
-            // categoryId: '',
             stepsString: '',
             base64data: '',
             isPublic: false,
-            // UserId: '',
+            userId: user.id,
         });
 
-    const onRecipeChange = e => {
+    const onTitleChange = e => {
         const copy = { ...recipe };
         copy[e.target.name] = e.target.value;
+        setRecipe(copy);
+    }
+
+    const onCategoryChange = e => {
+        const categoryId = Number(e.target.value)
+        const categoryName = categories.find(c => c.id === categoryId).name;
+        const copy = { ...recipe };
+        copy[e.target.name] = categoryName;
+        copy.categoryId = categoryId;
         setRecipe(copy);
     }
 
@@ -47,7 +49,7 @@ const AddRecipe = () => {
         const copy = [...ingredients];
         copy[index] = e.target.value;
         setIngredients(copy);
-        const recipeCopy = {...recipe};
+        const recipeCopy = { ...recipe };
         recipeCopy.ingredientsString = JSON.stringify(copy);
         setRecipe(recipeCopy);
     }
@@ -61,7 +63,7 @@ const AddRecipe = () => {
         const copy = [...steps];
         copy[index] = e.target.value;
         setSteps(copy);
-        const recipeCopy = {...recipe};
+        const recipeCopy = { ...recipe };
         recipeCopy.stepsString = JSON.stringify(copy);
         setRecipe(recipeCopy);
     }
@@ -71,9 +73,6 @@ const AddRecipe = () => {
         setSteps(copy);
     }
 
-    // const onFileChosen = e => {
-    //     setImage(fileRef.current.files[0]);
-    // }
     const onFileChosen = async () => {
         setImage(fileRef.current.files[0]);
         const copy = { ...recipe };
@@ -81,18 +80,14 @@ const AddRecipe = () => {
         setRecipe(copy);
     }
 
-
     const onSharePublicCheck = () => {
-        const copy = {...recipe};
+        const copy = { ...recipe };
         copy.isPublic = !copy.isPublic;
         setRecipe(copy);
     }
 
     const onSubmitClick = async e => {
         e.preventDefault();
-        // const base64data = await toBase64(fileRef.current.files[0]);
-        // recipe.base64data = base64data;
-        console.log("RECIPE:", recipe)
         await axios.post('/api/recipe/addrecipe', recipe);
     }
 
@@ -100,10 +95,10 @@ const AddRecipe = () => {
     if (image) {
         imageUrl = URL.createObjectURL(image);
     }
-    console.log(categories)
+    console.log(recipe)
     return (
         <div className="container" style={{ marginTop: '80px' }}>
-            <div className="container mt-5 d-flex">
+            <div className="container mt-5 d-flex align-items-start flex-wrap gap-4">
                 {/* Form Section */}
                 <div className="card shadow-sm" style={{ maxWidth: 600, width: '100%', borderRadius: 15, background: '#f8f9fa' }}>
                     <div className="card-body" style={{ padding: '20px' }}>
@@ -116,16 +111,16 @@ const AddRecipe = () => {
                                 <label htmlFor="title" className="form-label">
                                     Recipe Title
                                 </label>
-                                <input onChange={onRecipeChange} value={recipe.title} name="title" type="text" className="form-control" />
+                                <input onChange={onTitleChange} value={recipe.title} name="title" type="text" className="form-control" />
                             </div>
                             {/* Category */}
                             <div className="mb-3">
                                 <label htmlFor="category" className="form-label">
                                     Category
                                 </label>
-                                <select onChange={onRecipeChange} value={recipe.category} name="category" className="form-select">
-                                    <option value="-1">Select a category</option>
-                                    {categories.map(c => <option key={c.id} value={c.name}>{c.name}</option>)}
+                                <select onChange={onCategoryChange} value={recipe.category} name="category" className="form-select">
+                                    <option value='' hidden>Select a category</option>
+                                    {categories.map(c => <option key={c.id} value={c.id}>{c.name}</option>)}
                                 </select>
                             </div>
                             {/* Ingredients */}
@@ -182,7 +177,8 @@ const AddRecipe = () => {
                 <Recipe recipe={recipe}
                     ingredients={ingredients}
                     steps={steps}
-                    imageUrl={imageUrl} />
+                    imageUrl={imageUrl}
+                    isPreview={true} />
             </div>
         </div>
     )

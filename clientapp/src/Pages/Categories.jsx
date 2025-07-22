@@ -1,18 +1,30 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Link } from 'react-router-dom';
-import { useAuth } from '../Context';
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import axios from 'axios';
 
 function Categories() {
 
     const [name, setName] = useState('');
+    const [categoriesAndCounts, setCategoriesAndCounts] = useState([]);
+
+    useEffect(() => {
+        const getCategoriesAndCounts = async () => {
+            // setIsLoading(true);
+            const { data } = await axios.get('/api/recipe/getcategoriesandcounts');
+            console.log("category data:", data)
+            setCategoriesAndCounts(data);
+            // setIsLoading(false);
+        }
+        getCategoriesAndCounts();
+    }, [])
 
     const onAddClick = async () => {
-        await axios.post('api/recipe/addcategory', {name} )
+        await axios.post('api/recipe/addcategory', { name })
     }
 
-    console.log(name)
+
+    console.log(categoriesAndCounts)
     return (
         <div className="container" style={{ marginTop: '80px' }}>
             <div className="container mt-5" style={{ maxWidth: '600px' }}>
@@ -32,21 +44,15 @@ function Categories() {
                     </div>
                 </form>
                 <ul className="list-group shadow-sm">
-                    <li className="list-group-item d-flex justify-content-between align-items-center">
-                        Cakes
-                        <span className="badge bg-primary rounded-pill">2</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between align-items-center">
-                        Meats
-                        <span className="badge bg-primary rounded-pill">0</span>
-                    </li>
-                    <li className="list-group-item d-flex justify-content-between align-items-center">
-                        Junkfood
-                        <span className="badge bg-primary rounded-pill">1</span>
-                    </li>
+                    {categoriesAndCounts.map(c =>
+                        <li key={c.id} className="list-group-item d-flex justify-content-between align-items-center">
+                            {c.name}
+                            <span className="badge bg-primary rounded-pill">{c.recipeCount}</span>
+                        </li>
+                    )}
                 </ul>
             </div>
-        </div>
+        </div >
     );
 }
 

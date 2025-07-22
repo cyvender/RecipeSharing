@@ -6,7 +6,7 @@ import { useAuth } from '../Context';
 const Login = () => {
 
     const navigate = useNavigate();
-    const [formData, setFormData] = useState({ email: '1', password: '1' });
+    const [formData, setFormData] = useState({ email: '', password: ''});
     const [isValidLogin, setIsValidLogin] = useState(true);
     const { setUser } = useAuth();
 
@@ -31,6 +31,7 @@ const Login = () => {
         <div className="row" style={{ minHeight: '80vh', display: 'flex', alignItems: 'center' }}>
             <div className="col-md-6 offset-md-3 bg-light p-4 rounded shadow">
                 <h3>Log in to your account</h3>
+                {!isValidLogin && <span className="text-danger">Invalid username/password. Please try again.</span>}
                 <form>
                     <input onChange={onTextChange} value={formData.email} name="email" type="text" placeholder="Email" className="form-control" /><br />
                     <input onChange={onTextChange} value={formData.password} name="password" type="password" placeholder="Password" className="form-control" /><br />

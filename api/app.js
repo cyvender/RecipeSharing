@@ -3,7 +3,7 @@ const accountRoutes = require('./routes/account');
 const recipeRoutes = require('./routes/recipe');
 
 const camelCaseDeep = require('camelcase-object-deep');
-const { setupAuth, ensureAuthenticated } = require('./auth.js');
+const { setupAuth } = require('./auth.js');
 const session = require('express-session');
 
 const app = express();

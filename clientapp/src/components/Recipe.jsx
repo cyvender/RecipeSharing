@@ -1,16 +1,18 @@
 import { FontAwesomeIcon } from '@fortawesome/react-fontawesome';
 import { faCheckCircle, faListDots, faUser } from '@fortawesome/free-solid-svg-icons';
+import { useAuth } from '../Context';
 
-const Recipe = ({ recipe, ingredients, steps, imageUrl }) => {
-    console.log(imageUrl)
+const Recipe = ({ recipe, ingredients, steps, imageUrl, isPreview }) => {
+    const { user } = useAuth();
+
     return (
-        <div className="col-md-4 mb-4">
+        <div className={"col-md-4 mb-4"}>
             <div className="card shadow-sm h-100" style={{ borderRadius: '15px' }}>
                 <div className="card-body d-flex flex-column" style={{ maxHeight: '500px', overflow: 'hidden' }}>
                     <h3 className="text-center" style={{ fontFamily: 'Arial, sans-serif', color: 'rgb(52, 58, 64)' }}>
                         {recipe.title}
                     </h3>
-                    {imageUrl && <img src={`/api/recipe/image/${imageUrl}`} className="img-fluid" style={{
+                    {imageUrl && <img src={!isPreview ? `/api/recipe/image/${imageUrl}` : imageUrl} className="img-fluid" style={{
                         width: '150px',
                         height: '150px',
                         borderRadius: '10px',
@@ -33,11 +35,13 @@ const Recipe = ({ recipe, ingredients, steps, imageUrl }) => {
                                 {step}
                             </div>
                         )}
-                        <p>
-                            <strong>Public:</strong>{' '}
-                            {!recipe.isPublic && <FontAwesomeIcon icon={faUser} style={{ color: 'red' }} />}
-                            {recipe.isPublic && <FontAwesomeIcon icon={faUser} style={{ color: 'green' }} />}
-                        </p>
+                        {user &&
+                            <p>
+                                <strong>Public:</strong>{' '}
+                                {!recipe.isPublic && <FontAwesomeIcon icon={faUser} style={{ color: 'red' }} />}
+                                {recipe.isPublic && <FontAwesomeIcon icon={faUser} style={{ color: 'green' }} />}
+                            </p>
+                        }
                     </div>
                 </div>
             </div>
