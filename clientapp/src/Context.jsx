@@ -7,7 +7,7 @@ const Context = createContext();
 
 const ContextComponent = ({ children }) => {
     const [user, setUser] = useState(null);
-    const [isLoading, setIsLoading] = useState(true);
+    const [isLoading, setIsLoading] = useState(false);
     const [categories, setCategories] = useState([]);
 
     const getCategories = async () => {
@@ -18,15 +18,15 @@ const ContextComponent = ({ children }) => {
         setIsLoading(false);
     }
 
-    useEffect(() => {
-        const loadUser = async () => {
-            const { data } = await axios.get('/api/account/getcurrentuser');
-            setUser(data);
-            setIsLoading(false);
-        }
-        getCategories();
-        loadUser();
-    }, []);
+    // useEffect(() => {
+    //     const loadUser = async () => {
+    //         const { data } = await axios.get('/api/account/getcurrentuser');
+    //         setUser(data);
+    //         setIsLoading(false);
+    //     }
+    //     getCategories();
+    //     loadUser();
+    // }, []);
 
     if (isLoading) {
         return (
@@ -44,8 +44,6 @@ const ContextComponent = ({ children }) => {
         )
     }
 
-    console.log(categories)
-    console.log("user:", user)
     return (
         <Context.Provider value={{ user, setUser, categories, getCategories }}>
             {children}
