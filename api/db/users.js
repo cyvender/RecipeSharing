@@ -10,7 +10,7 @@ const config = {
         trustServerCertificate: true,
         trustedConnection: true
     }
-}
+} 
 
 const signup = async user => {
     const hash = await bcrypt.hash(user.password, 10);

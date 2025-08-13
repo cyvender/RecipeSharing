@@ -13,12 +13,18 @@ async function writeBase64ToFile(base64String) {
     const filePath = path.join('images', fileName);
     await fs.writeFile(filePath, buffer);
     return fileName;
-}
+} 
 
+// router.post('/addrecipe', ensureAuthenticated, async (req, res) => {
+//     const { base64data } = req.body;
+//     const fileName = await writeBase64ToFile(base64data);
+//     req.body.fileName = fileName;
+//     await db.addRecipe(req.body);
+//     res.json({ status: 'ok' })
+// });
+
+//testing postgreSQL
 router.post('/addrecipe', ensureAuthenticated, async (req, res) => {
-    const { base64data } = req.body;
-    const fileName = await writeBase64ToFile(base64data);
-    req.body.fileName = fileName;
     await db.addRecipe(req.body);
     res.json({ status: 'ok' })
 });
@@ -26,7 +32,7 @@ router.post('/addrecipe', ensureAuthenticated, async (req, res) => {
 router.post('/addcategory', ensureAuthenticated, async (req, res) => {
     await db.addCategory(req.body);
     res.json({ status: 'ok' });
-});
+}); 
 
 router.get('/getrecipes', async (req, res) => {
     res.json(await db.getRecipes());

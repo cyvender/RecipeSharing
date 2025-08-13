@@ -10,11 +10,9 @@ function Categories() {
 
     useEffect(() => {
         const getCategoriesAndCounts = async () => {
-            // setIsLoading(true);
             const { data } = await axios.get('/api/recipe/getcategoriesandcounts');
             console.log("category data:", data)
             setCategoriesAndCounts(data);
-            // setIsLoading(false);
         }
         getCategoriesAndCounts();
     }, [])
