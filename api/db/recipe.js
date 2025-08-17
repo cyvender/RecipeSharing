@@ -53,33 +53,38 @@ const addRecipe = async recipe => {
 
 
 const addCategory = async category => {
-    await sql.connect(config);
-    await sql.query`INSERT INTO Categories (Name) VALUES(${category.name})`;
-    await sql.close();
+    const client = await pool.connect();
+    const query = `INSERT INTO "Categories" ("Name")
+                    VALUES ($1)`;
+    const values = [
+        category.name
+    ];
+    await client.query(query, values);
+    client.release();
 }
 
 const getRecipes = async () => {
-    await sql.connect(config);
-    const { recordset } = await sql.query`SELECT * FROM Recipes`;
-    await sql.close();
-    return recordset;
+    const client = await pool.connect();
+    const { rows } = await client.query(`SELECT * FROM "Recipes"`);
+    client.release();
+    return rows;
 }
 
 const getCategories = async () => {
-    await sql.connect(config);
-    const { recordset } = await sql.query`SELECT * FROM Categories`;
-    await sql.close();
-    return recordset;
+    const client = await pool.connect();
+    const { rows } = await client.query(`SELECT * FROM "Categories"`);
+    client.release();
+    return rows;
 }
 
 const getCategoriesAndCounts = async () => {
-    await sql.connect(config);
-    const { recordset } = await sql.query`SELECT c.*, COUNT(r.Id) AS 'RecipeCount'
-                                        FROM Categories c
-                                        LEFT JOIN Recipes r ON r.CategoryID = c.Id
-                                        GROUP BY c.Name, c.Id`;
-    await sql.close();
-    return recordset;
+    const client = await pool.connect();
+    const { rows } = await client.query(`SELECT c.*, COUNT(r."Id") AS "RecipeCount"
+                                        FROM "Categories" c
+                                        LEFT JOIN "Recipes" r ON r."CategoryId" = c."Id"
+                                        GROUP BY c."Name", c."Id"`);
+    client.release();
+    return rows;
 }
 
 module.exports = { addCategory, getCategories, addRecipe, getRecipes, getCategoriesAndCounts };
