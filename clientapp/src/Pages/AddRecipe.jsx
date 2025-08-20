@@ -37,7 +37,7 @@ const AddRecipe = () => {
     }
 
     const onCategoryChange = e => {
-        const categoryId = Number(e.target.value)
+        const categoryId = e.target.value
         const categoryName = categories.find(c => c.id === categoryId).name;
         const copy = { ...recipe };
         copy[e.target.name] = categoryName;
@@ -168,7 +168,7 @@ const AddRecipe = () => {
                                     Share this recipe publicly
                                 </label>
                             </div>
-                            <button type="submit" className="btn btn-primary w-100" style={{ marginTop: '10px' }}>
+                            <button onClick={onSubmitClick} type="submit" className="btn btn-primary w-100" style={{ marginTop: '10px' }}>
                                 Add Recipe
                             </button>
                         </form>

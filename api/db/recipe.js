@@ -34,7 +34,7 @@ const pool = new Pool({
 // };
 const addRecipe = async recipe => {
     const client = await pool.connect();
-    const query = `INSERT INTO "Recipes" ("Title", "Ingredients", "Steps", "ImageUrl", "IsPublic", "UserId", "Category", "CategoryId")
+    const query = `INSERT INTO "Recipes" ("Title", "Ingredients", "Steps", "ImageUrl", "IsPublic", "Category", "CategoryId", "UserId")
                     VALUES ($1, $2, $3, $4, $5, $6, $7, $8)`;
     const values = [
         recipe.title,
@@ -42,10 +42,11 @@ const addRecipe = async recipe => {
         recipe.stepsString,
         recipe.fileName,
         recipe.isPublic,
-        recipe.userId,
         recipe.category,
-        recipe.categoryId
+        recipe.categoryId,
+        recipe.userId
     ];
+    
     await client.query(query, values);
     client.release();
 };

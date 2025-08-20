@@ -13,6 +13,7 @@ function Home() {
             console.log(data);
             data.forEach(r => r.ingredients = JSON.parse(r.ingredients));
             data.forEach(r => r.steps = JSON.parse(r.steps));
+
             user && setRecipes(data);
             !user && setRecipes(data.filter(r => r.isPublic === true))
         }

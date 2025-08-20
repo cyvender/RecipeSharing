@@ -25,6 +25,9 @@ async function writeBase64ToFile(base64String) {
 
 //testing postgreSQL
 router.post('/addrecipe', ensureAuthenticated, async (req, res) => {
+    const { base64data } = req.body;
+    const fileName = await writeBase64ToFile(base64data);
+    req.body.fileName = fileName;
     await db.addRecipe(req.body);
     res.json({ status: 'ok' })
 });
