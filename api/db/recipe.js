@@ -1,14 +1,14 @@
 const sql = require('mssql/msnodesqlv8');
 
-const config = {
-    database: 'RecipeSharing',
-    server: '.\\sqlexpress',
-    driver: 'msnodesqlv8',
-    options: {
-        trustServerCertificate: true,
-        trustedConnection: true
-    }
-}
+// const config = {
+//     database: 'RecipeSharing',
+//     server: '.\\sqlexpress',
+//     driver: 'msnodesqlv8',
+//     options: {
+//         trustServerCertificate: true,
+//         trustedConnection: true
+//     }
+// }
 
 // const addRecipe = async recipe => {
 //     await sql.connect(config);
